@@ -5,6 +5,8 @@ package com.atlassian.uwc.converters.twiki.cleaners;
 
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import com.atlassian.uwc.converters.twiki.ContentCleaner;
 
 /**
@@ -15,6 +17,7 @@ import com.atlassian.uwc.converters.twiki.ContentCleaner;
  */
 public class RegularExpressionCleaner implements  ContentCleaner
 {
+	Logger log = Logger.getLogger(this.getClass());
    protected String regularExpression;
    protected String replacement;
    protected int flags;
@@ -34,7 +37,9 @@ public class RegularExpressionCleaner implements  ContentCleaner
 
    public String clean(String twikiText)
    {
-      return Pattern.compile(getRegularExpression(), flags).matcher(twikiText).replaceAll(getReplacement());
+	  String res = Pattern.compile(getRegularExpression(), flags).matcher(twikiText).replaceAll(getReplacement());
+	  log.debug(res);
+      return res;
    }
 
    public String getRegularExpression()
