@@ -32,6 +32,64 @@ mvn install:install-file -DgroupId=org.jvnet.substance \
 
 ```
 
+## Notes
+
+Use the UI build using ANT and run it using `./run_uwc_on_mac.sh ` from within the `target/uwc` folder. 
+Make sure to copy the `converter.twiki.properties` file to `conf` under the output folder as well as the `confluenceSettings.properties` file.
+
+### Cleaning script for unused TWiki pages
+
+```
+# Delete Twiki fluff
+find data/ -name "WebAtom.*" -type f -delete
+find data/ -name "WebChanges.*" -type f -delete
+find data/ -name "WebIndex.*" -type f -delete
+find data/ -name "WebLeftBar.*" -type f -delete
+find data/ -name "WebNotify.*" -type f -delete
+find data/ -name "WebPreferences.*" -type f -delete
+find data/ -name "WebSearch.*" -type f -delete
+find data/ -name "WebStatistics.*" -type f -delete
+find data/ -name "WebTopicCreator.*" -type f -delete
+find data/ -name "WebTopicList.*" -type f -delete
+find data/ -name "WebRss.*" -type f -delete
+find data/ -name "WebAtomBase.*" -type f -delete
+find data/ -name "WebLeftBar*" -type f -delete
+find data/ -name "WebTopBar.*" -type f -delete
+find data/ -name "WebSiteTools.*" -type f -delete
+find data/ -name "WebSearchAdvanced.*" -type f -delete
+find data/ -name "WebRssBase.*" -type f -delete
+find data/ -name "WebTopicViewTemplate.*" -type f -delete
+find data/ -name "WebBottomBar.*" -type f -delete
+find data/ -name "WebTopicNonWikiTemplate.*" -type f -delete
+find data/ -name "WebTopicEditTemplate.*" -type f -delete
+find data/ -name "WebPreferencesHelp.*" -type f -delete
+find data/ -name "WebChangesAlert.*" -type f -delete
+find data/ -name "WebTemplateTopics.*" -type f -delete
+```
+
+
+### Consolidate several Webs into the same Confluence space
+
+In case several TWiki webs need to go into the same Confluence space and page names collide, all pages can be prefixed
+
+```
+LC_ALL=C sed -i "" 's/%META:TOPICPARENT{name="/%META:TOPICPARENT{name="BKV2_/' *.txt
+```
+and renamed
+```
+for f in * ; do mv -- "$f" "BKV2_$f" ; done  
+```
+
+In this case you also need to rename the attachment folders. Note that this will break TWiki-links in the exported Web.
+
+### Common sources of failed page transfers
+
+- "Generate PDF" script tags and PDFSTART/PDFSTOP tags (can be added to converter settings for replacement)
+- Code blocks with { and } (only found in <verbatim>-tags for DB2 scripts)
+- Windows file paths containing "\"
+- Styles/CSS in <verbatim> tags
+
+
 ## More
 
 More details and documentation is here: https://migrations.atlassian.net/wiki/display/UWC/Universal+Wiki+Converter
